@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Enums\UserRole;
 use App\Listeners\RecordSuccessfulLogin;
 use App\Models\User;
+use App\Services\Whm\Contracts\WhmClient;
+use App\Services\Whm\HttpWhmClient;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Date;
@@ -21,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(WhmClient::class, HttpWhmClient::class);
     }
 
     /**
