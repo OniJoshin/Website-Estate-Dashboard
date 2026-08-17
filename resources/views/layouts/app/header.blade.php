@@ -13,6 +13,9 @@
                 <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                     {{ __('Dashboard') }}
                 </flux:navbar.item>
+                <flux:navbar.item icon="server-stack" :href="route('servers.index')" :current="request()->routeIs('servers.*') || request()->routeIs('admin.servers.*')" wire:navigate>
+                    {{ __('Servers') }}
+                </flux:navbar.item>
                 @can('admin')
                     <flux:navbar.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>
                         {{ __('Users') }}
@@ -60,6 +63,9 @@
                 <flux:sidebar.group :heading="__('Platform')">
                     <flux:sidebar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard')  }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="server-stack" :href="route('servers.index')" :current="request()->routeIs('servers.*') || request()->routeIs('admin.servers.*')" wire:navigate>
+                        {{ __('Servers') }}
                     </flux:sidebar.item>
                     @can('admin')
                         <flux:sidebar.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>

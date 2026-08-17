@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 #[Fillable(['name', 'hostname', 'whm_port', 'api_username', 'api_token', 'enabled', 'last_synced_at', 'last_successful_sync_at'])]
 #[Hidden(['api_token'])]
@@ -26,6 +27,12 @@ class Server extends Model
     public function cpanelAccounts(): HasMany
     {
         return $this->hasMany(CpanelAccount::class);
+    }
+
+    /** @return HasManyThrough<Domain, CpanelAccount, $this> */
+    public function domains(): HasManyThrough
+    {
+        return $this->hasManyThrough(Domain::class, CpanelAccount::class);
     }
 
     /** @return HasMany<ServerCheck, $this> */
