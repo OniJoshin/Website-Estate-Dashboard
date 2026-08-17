@@ -26,6 +26,7 @@ class SyncRunFactory extends Factory
             'status' => SyncRunStatus::Successful,
             'started_at' => now()->subMinute(),
             'completed_at' => now(),
+            'batch_id' => null,
             'accounts_found' => 2,
             'accounts_created' => 1,
             'accounts_updated' => 1,

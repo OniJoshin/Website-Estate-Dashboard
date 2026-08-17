@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['server_id', 'type', 'status', 'started_at', 'completed_at', 'accounts_found', 'accounts_created', 'accounts_updated', 'accounts_removed', 'domains_found', 'domains_created', 'domains_updated', 'domains_removed', 'errors_count', 'error_summary'])]
+#[Fillable(['server_id', 'type', 'status', 'started_at', 'completed_at', 'batch_id', 'accounts_found', 'accounts_created', 'accounts_updated', 'accounts_removed', 'domains_found', 'domains_created', 'domains_updated', 'domains_removed', 'errors_count', 'error_summary'])]
 class SyncRun extends Model
 {
     /** @use HasFactory<SyncRunFactory> */
