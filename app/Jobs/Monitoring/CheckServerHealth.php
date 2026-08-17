@@ -6,12 +6,13 @@ use App\Models\Server;
 use App\Services\Monitoring\IssueEvaluator;
 use App\Services\Whm\Contracts\WhmClient;
 use App\Services\Whm\Exceptions\WhmApiException;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class CheckServerHealth implements ShouldQueue
+class CheckServerHealth implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
@@ -19,9 +20,22 @@ class CheckServerHealth implements ShouldQueue
 
     private const int LOCK_WAIT_SECONDS = 5;
 
-    public int $tries = 1;
+    public int $tries = 3;
+
+    public int $uniqueFor = 900;
 
     public function __construct(public int $serverId) {}
+
+    public function uniqueId(): string
+    {
+        return (string) $this->serverId;
+    }
+
+    /** @return list<int> */
+    public function backoff(): array
+    {
+        return [10, 30];
+    }
 
     public function handle(WhmClient $client, IssueEvaluator $evaluator): void
     {

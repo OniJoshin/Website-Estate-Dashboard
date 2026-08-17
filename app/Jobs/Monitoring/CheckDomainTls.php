@@ -5,12 +5,13 @@ namespace App\Jobs\Monitoring;
 use App\Models\Domain;
 use App\Services\Monitoring\Contracts\TlsInspector;
 use App\Services\Monitoring\IssueEvaluator;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class CheckDomainTls implements ShouldQueue
+class CheckDomainTls implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
@@ -18,9 +19,22 @@ class CheckDomainTls implements ShouldQueue
 
     private const int LOCK_WAIT_SECONDS = 5;
 
-    public int $tries = 1;
+    public int $tries = 3;
+
+    public int $uniqueFor = 900;
 
     public function __construct(public int $domainId) {}
+
+    public function uniqueId(): string
+    {
+        return (string) $this->domainId;
+    }
+
+    /** @return list<int> */
+    public function backoff(): array
+    {
+        return [10, 30];
+    }
 
     public function handle(TlsInspector $inspector, IssueEvaluator $evaluator): void
     {
