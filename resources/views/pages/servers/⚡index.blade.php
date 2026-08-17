@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Server;
+use App\Enums\SyncRunStatus;
+use App\Enums\SyncRunType;
+use App\Support\InventoryFreshness;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Gate;
@@ -8,11 +11,18 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 new #[Title('Servers')] class extends Component {
-    /** @return array{servers: Collection<int, Server>} */
+    /** @return array{servers: Collection<int, Server>, inventoryFreshness: InventoryFreshness} */
     public function with(): array
     {
         return [
             'servers' => Server::query()
+                ->with('latestSyncRun')
+                ->withExists([
+                    'syncRuns as inventory_sync_running' => fn ($query) => $query
+                        ->where('type', SyncRunType::Inventory)
+                        ->where('status', SyncRunStatus::Running)
+                        ->whereNull('completed_at'),
+                ])
                 ->withCount([
                     'cpanelAccounts as active_cpanel_accounts_count' => fn ($query) => $query->whereNull('removed_at'),
                     'domains as active_monitored_domains_count' => fn ($query) => $query
@@ -21,6 +31,7 @@ new #[Title('Servers')] class extends Component {
                 ])
                 ->orderBy('name')
                 ->get(),
+            'inventoryFreshness' => app(InventoryFreshness::class),
         ];
     }
 
@@ -61,7 +72,8 @@ new #[Title('Servers')] class extends Component {
                     <thead class="bg-zinc-50 dark:bg-zinc-800/70">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Server') }}</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Status') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Server status') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Inventory') }}</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Last successful sync') }}</th>
                             <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Accounts') }}</th>
                             <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{{ __('Monitored domains') }}</th>
@@ -74,8 +86,16 @@ new #[Title('Servers')] class extends Component {
                         @foreach ($servers as $server)
                             <tr wire:key="server-{{ $server->id }}">
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    <div class="font-medium text-zinc-900 dark:text-zinc-100">{{ $server->name }}</div>
+                                    <a class="font-medium text-zinc-900 hover:underline dark:text-zinc-100" href="{{ route('servers.show', $server) }}" wire:navigate>{{ $server->name }}</a>
                                     <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ $server->hostname }}:{{ $server->whm_port }}</div>
+                                </td>
+                                <td class="whitespace-nowrap px-6 py-4">
+                                    <div class="flex flex-col gap-1">
+                                        <flux:badge size="sm" color="zinc">{{ $inventoryFreshness->status($server->last_successful_sync_at, (bool) $server->inventory_sync_running) }}</flux:badge>
+                                        <span class="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {{ $server->latestSyncRun ? ucfirst($server->latestSyncRun->status->value) : __('No runs') }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     <flux:badge :color="$server->enabled ? 'green' : 'zinc'">

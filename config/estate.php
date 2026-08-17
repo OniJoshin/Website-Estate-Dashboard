@@ -33,6 +33,10 @@ return [
         'check_days' => (int) env('ESTATE_CHECK_RETENTION_DAYS', 90),
     ],
 
+    'inventory' => [
+        'stale_hours' => (int) env('ESTATE_INVENTORY_STALE_HOURS', 26),
+    ],
+
     'schedule' => [
         'server_minutes' => (int) env('ESTATE_SERVER_CHECK_MINUTES', 5),
         'http_minutes' => (int) env('ESTATE_HTTP_CHECK_MINUTES', 10),

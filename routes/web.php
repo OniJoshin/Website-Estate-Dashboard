@@ -8,6 +8,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
     Route::livewire('servers', 'pages::servers.index')->name('servers.index');
+    Route::livewire('servers/{server}', 'pages::servers.show')->name('servers.show');
 
     Route::livewire('admin/users', 'pages::admin.users.index')
         ->middleware('can:admin')

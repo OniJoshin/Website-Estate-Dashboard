@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['name', 'hostname', 'whm_port', 'api_username', 'api_token', 'enabled', 'last_synced_at', 'last_successful_sync_at'])]
 #[Hidden(['api_token'])]
@@ -45,6 +46,12 @@ class Server extends Model
     public function syncRuns(): HasMany
     {
         return $this->hasMany(SyncRun::class);
+    }
+
+    /** @return HasOne<SyncRun, $this> */
+    public function latestSyncRun(): HasOne
+    {
+        return $this->hasOne(SyncRun::class)->latestOfMany('started_at');
     }
 
     /** @return HasMany<Issue, $this> */
