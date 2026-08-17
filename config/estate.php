@@ -7,6 +7,7 @@ return [
         'failure_debounce' => (int) env('ESTATE_HTTP_FAILURE_DEBOUNCE', 2),
         'recovery_debounce' => (int) env('ESTATE_HTTP_RECOVERY_DEBOUNCE', 2),
         'slow_debounce' => (int) env('ESTATE_HTTP_SLOW_DEBOUNCE', 3),
+        'max_redirects' => (int) env('ESTATE_HTTP_MAX_REDIRECTS', 10),
     ],
 
     'dns' => [

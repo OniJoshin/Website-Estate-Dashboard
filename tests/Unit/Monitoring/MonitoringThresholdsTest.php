@@ -16,6 +16,8 @@ class MonitoringThresholdsTest extends TestCase
         $this->assertSame(2, config('estate.http.failure_debounce'));
         $this->assertSame(2, config('estate.http.recovery_debounce'));
         $this->assertSame(3, config('estate.http.slow_debounce'));
+        $this->assertSame(10, config('estate.http.max_redirects'));
+        $this->assertIsInt(config('estate.http.max_redirects'));
         $this->assertSame(2, config('estate.dns.failure_debounce'));
         $this->assertSame(2, config('estate.dns.recovery_debounce'));
         $this->assertSame(2, config('estate.server.failure_debounce'));
@@ -43,6 +45,7 @@ class MonitoringThresholdsTest extends TestCase
             [$thresholds->httpFailureDebounce(), 2],
             [$thresholds->httpRecoveryDebounce(), 2],
             [$thresholds->slowHttpDebounce(), 3],
+            [$thresholds->httpMaxRedirects(), 10],
             [$thresholds->dnsFailureDebounce(), 2],
             [$thresholds->dnsRecoveryDebounce(), 2],
             [$thresholds->serverFailureDebounce(), 2],
@@ -68,6 +71,7 @@ class MonitoringThresholdsTest extends TestCase
             'estate.http.failure_debounce' => 3,
             'estate.http.recovery_debounce' => 4,
             'estate.http.slow_debounce' => 5,
+            'estate.http.max_redirects' => 12,
             'estate.dns.failure_debounce' => 6,
             'estate.dns.recovery_debounce' => 7,
             'estate.server.failure_debounce' => 8,
@@ -86,6 +90,7 @@ class MonitoringThresholdsTest extends TestCase
         $this->assertSame(3, $thresholds->httpFailureDebounce());
         $this->assertSame(4, $thresholds->httpRecoveryDebounce());
         $this->assertSame(5, $thresholds->slowHttpDebounce());
+        $this->assertSame(12, $thresholds->httpMaxRedirects());
         $this->assertSame(6, $thresholds->dnsFailureDebounce());
         $this->assertSame(7, $thresholds->dnsRecoveryDebounce());
         $this->assertSame(8, $thresholds->serverFailureDebounce());
@@ -134,6 +139,7 @@ class MonitoringThresholdsTest extends TestCase
     {
         yield 'HTTP timeout' => ['estate.http.timeout_seconds'];
         yield 'HTTP slow response threshold' => ['estate.http.slow_ms'];
+        yield 'HTTP maximum redirects' => ['estate.http.max_redirects'];
         yield 'retention' => ['estate.retention.check_days'];
         yield 'server interval' => ['estate.schedule.server_minutes'];
         yield 'HTTP interval' => ['estate.schedule.http_minutes'];

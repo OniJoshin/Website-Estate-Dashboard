@@ -17,6 +17,8 @@ final class MonitoringThresholds
 
     private readonly int $slowHttpDebounce;
 
+    private readonly int $httpMaxRedirects;
+
     private readonly int $dnsFailureDebounce;
 
     private readonly int $dnsRecoveryDebounce;
@@ -42,6 +44,7 @@ final class MonitoringThresholds
         $this->httpFailureDebounce = Config::integer('estate.http.failure_debounce');
         $this->httpRecoveryDebounce = Config::integer('estate.http.recovery_debounce');
         $this->slowHttpDebounce = Config::integer('estate.http.slow_debounce');
+        $this->httpMaxRedirects = Config::integer('estate.http.max_redirects');
         $this->dnsFailureDebounce = Config::integer('estate.dns.failure_debounce');
         $this->dnsRecoveryDebounce = Config::integer('estate.dns.recovery_debounce');
         $this->serverFailureDebounce = Config::integer('estate.server.failure_debounce');
@@ -78,6 +81,11 @@ final class MonitoringThresholds
     public function slowHttpDebounce(): int
     {
         return $this->slowHttpDebounce;
+    }
+
+    public function httpMaxRedirects(): int
+    {
+        return $this->httpMaxRedirects;
     }
 
     public function dnsFailureDebounce(): int
@@ -148,6 +156,7 @@ final class MonitoringThresholds
         $values = [
             'HTTP timeout' => $this->httpTimeoutSeconds,
             'HTTP slow response threshold' => $this->slowHttpMilliseconds,
+            'HTTP maximum redirects' => $this->httpMaxRedirects,
             'check retention' => $this->retentionDays,
             'server check interval' => Config::integer('estate.schedule.server_minutes'),
             'HTTP check interval' => Config::integer('estate.schedule.http_minutes'),
