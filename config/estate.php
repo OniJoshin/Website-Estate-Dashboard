@@ -23,6 +23,7 @@ return [
     'tls' => [
         'warning_days' => (int) env('ESTATE_SSL_WARNING_DAYS', 30),
         'critical_days' => (int) env('ESTATE_SSL_CRITICAL_DAYS', 7),
+        'timeout_seconds' => (int) env('ESTATE_TLS_TIMEOUT', 10),
     ],
 
     'disk' => [

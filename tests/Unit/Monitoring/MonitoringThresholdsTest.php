@@ -24,6 +24,8 @@ class MonitoringThresholdsTest extends TestCase
         $this->assertSame(2, config('estate.server.recovery_debounce'));
         $this->assertSame(30, config('estate.tls.warning_days'));
         $this->assertSame(7, config('estate.tls.critical_days'));
+        $this->assertSame(10, config('estate.tls.timeout_seconds'));
+        $this->assertIsInt(config('estate.tls.timeout_seconds'));
         $this->assertSame(85, config('estate.disk.warning_percent'));
         $this->assertSame(95, config('estate.disk.critical_percent'));
         $this->assertSame(90, config('estate.retention.check_days'));
@@ -52,6 +54,7 @@ class MonitoringThresholdsTest extends TestCase
             [$thresholds->serverRecoveryDebounce(), 2],
             [$thresholds->sslWarningDays(), 30],
             [$thresholds->sslCriticalDays(), 7],
+            [$thresholds->tlsTimeoutSeconds(), 10],
             [$thresholds->diskWarningPercent(), 85],
             [$thresholds->diskCriticalPercent(), 95],
             [$thresholds->retentionDays(), 90],
@@ -78,6 +81,7 @@ class MonitoringThresholdsTest extends TestCase
             'estate.server.recovery_debounce' => 9,
             'estate.tls.warning_days' => 40,
             'estate.tls.critical_days' => 10,
+            'estate.tls.timeout_seconds' => 12,
             'estate.disk.warning_percent' => 80,
             'estate.disk.critical_percent' => 90,
             'estate.retention.check_days' => 120,
@@ -97,6 +101,7 @@ class MonitoringThresholdsTest extends TestCase
         $this->assertSame(9, $thresholds->serverRecoveryDebounce());
         $this->assertSame(40, $thresholds->sslWarningDays());
         $this->assertSame(10, $thresholds->sslCriticalDays());
+        $this->assertSame(12, $thresholds->tlsTimeoutSeconds());
         $this->assertSame(80, $thresholds->diskWarningPercent());
         $this->assertSame(90, $thresholds->diskCriticalPercent());
         $this->assertSame(120, $thresholds->retentionDays());
@@ -140,6 +145,7 @@ class MonitoringThresholdsTest extends TestCase
         yield 'HTTP timeout' => ['estate.http.timeout_seconds'];
         yield 'HTTP slow response threshold' => ['estate.http.slow_ms'];
         yield 'HTTP maximum redirects' => ['estate.http.max_redirects'];
+        yield 'TLS timeout' => ['estate.tls.timeout_seconds'];
         yield 'retention' => ['estate.retention.check_days'];
         yield 'server interval' => ['estate.schedule.server_minutes'];
         yield 'HTTP interval' => ['estate.schedule.http_minutes'];

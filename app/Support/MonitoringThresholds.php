@@ -31,6 +31,8 @@ final class MonitoringThresholds
 
     private readonly int $sslCriticalDays;
 
+    private readonly int $tlsTimeoutSeconds;
+
     private readonly int $diskWarningPercent;
 
     private readonly int $diskCriticalPercent;
@@ -51,6 +53,7 @@ final class MonitoringThresholds
         $this->serverRecoveryDebounce = Config::integer('estate.server.recovery_debounce');
         $this->sslWarningDays = Config::integer('estate.tls.warning_days');
         $this->sslCriticalDays = Config::integer('estate.tls.critical_days');
+        $this->tlsTimeoutSeconds = Config::integer('estate.tls.timeout_seconds');
         $this->diskWarningPercent = Config::integer('estate.disk.warning_percent');
         $this->diskCriticalPercent = Config::integer('estate.disk.critical_percent');
         $this->retentionDays = Config::integer('estate.retention.check_days');
@@ -118,6 +121,11 @@ final class MonitoringThresholds
         return $this->sslCriticalDays;
     }
 
+    public function tlsTimeoutSeconds(): int
+    {
+        return $this->tlsTimeoutSeconds;
+    }
+
     public function diskWarningPercent(): int
     {
         return $this->diskWarningPercent;
@@ -157,6 +165,7 @@ final class MonitoringThresholds
             'HTTP timeout' => $this->httpTimeoutSeconds,
             'HTTP slow response threshold' => $this->slowHttpMilliseconds,
             'HTTP maximum redirects' => $this->httpMaxRedirects,
+            'TLS timeout' => $this->tlsTimeoutSeconds,
             'check retention' => $this->retentionDays,
             'server check interval' => Config::integer('estate.schedule.server_minutes'),
             'HTTP check interval' => Config::integer('estate.schedule.http_minutes'),
