@@ -4,10 +4,12 @@ namespace App\Jobs\Inventory;
 
 use App\Enums\SyncRunStatus;
 use App\Enums\SyncRunType;
+use App\Models\CpanelAccount;
 use App\Models\Server;
 use App\Models\SyncRun;
 use App\Services\Inventory\InventoryReconciler;
 use App\Services\Inventory\SyncRunRecorder;
+use App\Services\Monitoring\IssueEvaluator;
 use App\Services\Whm\Contracts\WhmClient;
 use App\Services\Whm\Exceptions\WhmApiException;
 use Illuminate\Bus\Batch;
@@ -29,6 +31,7 @@ class SyncServerInventory implements ShouldQueue
         WhmClient $whm,
         InventoryReconciler $reconciler,
         SyncRunRecorder $recorder,
+        IssueEvaluator $evaluator,
     ): void {
         $server = Server::find($this->serverId);
 
@@ -81,6 +84,9 @@ class SyncServerInventory implements ShouldQueue
 
         try {
             $outcome = $reconciler->reconcileAccounts($server, $accounts, $diskUsage);
+            $server->cpanelAccounts()->each(
+                static fn (CpanelAccount $account) => $evaluator->evaluateAccount($account),
+            );
             $recorder->increment($syncRun->id, [
                 'accounts_found' => $outcome->found,
                 'accounts_created' => $outcome->created,

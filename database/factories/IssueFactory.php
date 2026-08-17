@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\IssueSeverity;
+use App\Enums\IssueType;
 use App\Models\CpanelAccount;
 use App\Models\Domain;
 use App\Models\Issue;
@@ -25,7 +26,7 @@ class IssueFactory extends Factory
             'server_id' => Server::factory(),
             'cpanel_account_id' => null,
             'domain_id' => null,
-            'type' => 'fixture_issue',
+            'type' => IssueType::ServerHealthUnavailable,
             'severity' => IssueSeverity::Warning,
             'title' => 'Fixture issue',
             'details' => 'Synthetic issue details for automated tests.',

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\IssueSeverity;
+use App\Enums\IssueType;
 use Database\Factories\IssueFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +38,7 @@ class Issue extends Model
     protected function casts(): array
     {
         return [
+            'type' => IssueType::class,
             'severity' => IssueSeverity::class,
             'first_detected_at' => 'datetime',
             'last_detected_at' => 'datetime',

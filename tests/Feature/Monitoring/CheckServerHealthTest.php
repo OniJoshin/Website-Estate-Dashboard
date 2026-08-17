@@ -3,6 +3,8 @@
 namespace Tests\Feature\Monitoring;
 
 use App\Data\Whm\WhmServerHealthData;
+use App\Enums\IssueSeverity;
+use App\Enums\IssueType;
 use App\Jobs\Monitoring\CheckServerHealth;
 use App\Models\Issue;
 use App\Models\Server;
@@ -53,11 +55,13 @@ class CheckServerHealthTest extends TestCase
         $this->assertIsNumeric($check->partitions[1]['used_percent']);
         $this->assertNull($check->error_message);
         $this->assertTrue($check->checked_at->isCurrentSecond());
-        $this->assertSame(0, Issue::query()->count());
+        $issue = Issue::query()->sole();
+        $this->assertSame(IssueType::DiskUsage, $issue->type);
+        $this->assertSame(IssueSeverity::Warning, $issue->severity);
         Http::assertNothingSent();
     }
 
-    public function test_high_load_and_disk_values_are_observations_not_issues(): void
+    public function test_high_disk_opens_an_issue_but_high_load_does_not_create_an_additional_issue(): void
     {
         $health = new WhmServerHealthData(
             load1: 99.75,
@@ -79,7 +83,9 @@ class CheckServerHealthTest extends TestCase
         $check = ServerCheck::query()->sole();
         $this->assertSame(99.75, (float) $check->load_1m);
         $this->assertSame(96.0, (float) $check->partitions[0]['used_percent']);
-        $this->assertSame(0, Issue::query()->count());
+        $issue = Issue::query()->sole();
+        $this->assertSame(IssueType::DiskUsage, $issue->type);
+        $this->assertSame(IssueSeverity::Critical, $issue->severity);
     }
 
     public function test_repeated_executions_append_immutable_checks(): void
