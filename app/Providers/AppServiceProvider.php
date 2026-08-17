@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Enums\UserRole;
 use App\Listeners\RecordSuccessfulLogin;
 use App\Models\User;
+use App\Services\Monitoring\Contracts\DnsResolver;
+use App\Services\Monitoring\NativeDnsResolver;
 use App\Services\Whm\Contracts\WhmClient;
 use App\Services\Whm\HttpWhmClient;
 use Carbon\CarbonImmutable;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(DnsResolver::class, NativeDnsResolver::class);
         $this->app->bind(WhmClient::class, HttpWhmClient::class);
     }
 
