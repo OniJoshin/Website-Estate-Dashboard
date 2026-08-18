@@ -5,10 +5,13 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::livewire('dashboard', 'pages::dashboard')->name('dashboard');
 
     Route::livewire('servers', 'pages::servers.index')->name('servers.index');
     Route::livewire('servers/{server}', 'pages::servers.show')->name('servers.show');
+    Route::livewire('domains', 'pages::domains.index')->name('domains.index');
+    Route::livewire('domains/{domain}', 'pages::domains.show')->name('domains.show');
+    Route::livewire('issues', 'pages::issues.index')->name('issues.index');
 
     Route::livewire('admin/users', 'pages::admin.users.index')
         ->middleware('can:admin')

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['cpanel_account_id', 'domain', 'type', 'parent_domain_id', 'document_root', 'classification', 'classification_source', 'monitoring_enabled', 'is_active', 'metadata', 'discovered_at', 'last_seen_at', 'removed_at'])]
 class Domain extends Model
@@ -47,6 +48,27 @@ class Domain extends Model
     public function domainChecks(): HasMany
     {
         return $this->hasMany(DomainCheck::class);
+    }
+
+    /** @return HasOne<DomainCheck, $this> */
+    public function latestHttpCheck(): HasOne
+    {
+        return $this->hasOne(DomainCheck::class)
+            ->ofMany(['checked_at' => 'max', 'id' => 'max'], fn ($query) => $query->where('check_type', 'http'));
+    }
+
+    /** @return HasOne<DomainCheck, $this> */
+    public function latestDnsCheck(): HasOne
+    {
+        return $this->hasOne(DomainCheck::class)
+            ->ofMany(['checked_at' => 'max', 'id' => 'max'], fn ($query) => $query->where('check_type', 'dns'));
+    }
+
+    /** @return HasOne<DomainCheck, $this> */
+    public function latestTlsCheck(): HasOne
+    {
+        return $this->hasOne(DomainCheck::class)
+            ->ofMany(['checked_at' => 'max', 'id' => 'max'], fn ($query) => $query->where('check_type', 'tls'));
     }
 
     /** @return HasMany<Issue, $this> */

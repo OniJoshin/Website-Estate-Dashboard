@@ -42,6 +42,12 @@ class Server extends Model
         return $this->hasMany(ServerCheck::class);
     }
 
+    /** @return HasOne<ServerCheck, $this> */
+    public function latestServerCheck(): HasOne
+    {
+        return $this->hasOne(ServerCheck::class)->ofMany(['checked_at' => 'max', 'id' => 'max']);
+    }
+
     /** @return HasMany<SyncRun, $this> */
     public function syncRuns(): HasMany
     {

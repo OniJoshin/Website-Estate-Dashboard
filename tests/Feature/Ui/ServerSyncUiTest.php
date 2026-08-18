@@ -61,6 +61,7 @@ class ServerSyncUiTest extends TestCase
         CpanelAccount::factory()->for($server)->removed()->create();
         Domain::factory()->for($currentAccount)->count(2)->create(['monitoring_enabled' => true]);
         Domain::factory()->for($currentAccount)->create(['monitoring_enabled' => false]);
+        Domain::factory()->for($currentAccount)->create(['monitoring_enabled' => true, 'is_active' => false]);
         Domain::factory()->for($currentAccount)->removed()->create(['monitoring_enabled' => true]);
 
         $this->actingAs($this->staff())

@@ -18,6 +18,12 @@
                     <flux:sidebar.item icon="server-stack" :href="route('servers.index')" :current="request()->routeIs('servers.*') || request()->routeIs('admin.servers.*')" wire:navigate>
                         {{ __('Servers') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="globe-alt" :href="route('domains.index')" :current="request()->routeIs('domains.*')" wire:navigate>
+                        {{ __('Domains') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="exclamation-triangle" :href="route('issues.index')" :current="request()->routeIs('issues.*')" wire:navigate>
+                        {{ __('Issues') }}
+                    </flux:sidebar.item>
                     @can('admin')
                         <flux:sidebar.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>
                             {{ __('Users') }}
