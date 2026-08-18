@@ -28,6 +28,9 @@
                         <flux:sidebar.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>
                             {{ __('Users') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="wrench-screwdriver" :href="route('admin.operations')" :current="request()->routeIs('admin.operations')" wire:navigate>
+                            {{ __('Operations') }}
+                        </flux:sidebar.item>
                     @endcan
                 </flux:sidebar.group>
             </flux:sidebar.nav>

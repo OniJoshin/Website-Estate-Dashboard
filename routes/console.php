@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\Operations\RecordQueueHeartbeat;
 use App\Models\DomainCheck;
 use App\Models\ServerCheck;
 use App\Support\ScheduleFrequency;
@@ -14,6 +15,8 @@ Artisan::command('inspire', function () {
 Schedule::command('estate:dispatch-server-checks')
     ->cron(ScheduleFrequency::cron((int) config('estate.schedule.server_minutes')))
     ->withoutOverlapping();
+Schedule::command('estate:record-scheduler-heartbeat')->everyMinute()->withoutOverlapping();
+Schedule::job(new RecordQueueHeartbeat)->everyMinute()->withoutOverlapping();
 Schedule::command('estate:dispatch-domain-checks http')
     ->cron(ScheduleFrequency::cron((int) config('estate.schedule.http_minutes'), 2))
     ->withoutOverlapping();

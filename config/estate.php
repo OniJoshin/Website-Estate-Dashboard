@@ -39,6 +39,10 @@ return [
         'stale_hours' => (int) env('ESTATE_INVENTORY_STALE_HOURS', 26),
     ],
 
+    'operations' => [
+        'heartbeat_stale_minutes' => (int) env('ESTATE_OPERATIONS_HEARTBEAT_STALE_MINUTES', 3),
+    ],
+
     'schedule' => [
         'server_minutes' => (int) env('ESTATE_SERVER_CHECK_MINUTES', 5),
         'http_minutes' => (int) env('ESTATE_HTTP_CHECK_MINUTES', 10),

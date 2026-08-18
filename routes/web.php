@@ -17,6 +17,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('can:admin')
         ->name('admin.users.index');
 
+    Route::livewire('admin/operations', 'pages::admin.operations')
+        ->middleware('can:admin')
+        ->name('admin.operations');
+
     Route::livewire('admin/servers/create', 'pages::admin.servers.create')
         ->middleware('can:admin')
         ->name('admin.servers.create');

@@ -35,6 +35,8 @@ class MonitoringThresholdsTest extends TestCase
         $this->assertSame(360, config('estate.schedule.tls_minutes'));
         $this->assertSame('03:00', config('estate.schedule.inventory_time'));
         $this->assertSame('Europe/London', config('estate.schedule.inventory_timezone'));
+        $this->assertSame(3, config('estate.operations.heartbeat_stale_minutes'));
+        $this->assertIsInt(config('estate.operations.heartbeat_stale_minutes'));
     }
 
     public function test_monitoring_thresholds_return_typed_default_values(): void
